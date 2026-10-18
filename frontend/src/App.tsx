@@ -3,12 +3,19 @@ import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { AdminRoute } from './components/AdminRoute';
 
 // Pages
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Profile } from './pages/Profile';
+
+// Admin Pages
+import { Dashboard } from './pages/admin/Dashboard';
+import { CreateEvent } from './pages/admin/CreateEvent';
+import { EditEvent } from './pages/admin/EditEvent';
+import { EventRegistrations } from './pages/admin/EventRegistrations';
 
 export function App() {
   return (
@@ -41,6 +48,40 @@ export function App() {
                   <ProtectedRoute>
                     <Profile />
                   </ProtectedRoute>
+                }
+              />
+
+              {/* Admin Routes */}
+              <Route
+                path="/admin"
+                element={
+                  <AdminRoute>
+                    <Dashboard />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/events/new"
+                element={
+                  <AdminRoute>
+                    <CreateEvent />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/events/:id/edit"
+                element={
+                  <AdminRoute>
+                    <EditEvent />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/events/:id/registrations"
+                element={
+                  <AdminRoute>
+                    <EventRegistrations />
+                  </AdminRoute>
                 }
               />
 
