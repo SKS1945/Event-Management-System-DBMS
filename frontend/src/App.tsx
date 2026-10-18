@@ -18,6 +18,7 @@ import { Dashboard } from './pages/admin/Dashboard';
 import { CreateEvent } from './pages/admin/CreateEvent';
 import { EditEvent } from './pages/admin/EditEvent';
 import { EventRegistrations } from './pages/admin/EventRegistrations';
+import { Payments } from './pages/admin/Payments';
 
 export function App() {
   return (
@@ -92,6 +93,14 @@ export function App() {
                 element={
                   <AdminRoute>
                     <EventRegistrations />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/payments"
+                element={
+                  <AdminRoute>
+                    <Payments />
                   </AdminRoute>
                 }
               />
