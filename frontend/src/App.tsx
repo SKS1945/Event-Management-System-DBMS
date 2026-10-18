@@ -10,6 +10,8 @@ import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Profile } from './pages/Profile';
+import { EventDetails } from './pages/EventDetails';
+import { MyRegistrations } from './pages/MyRegistrations';
 
 // Admin Pages
 import { Dashboard } from './pages/admin/Dashboard';
@@ -38,6 +40,7 @@ export function App() {
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<Home />} />
+              <Route path="/events/:id" element={<EventDetails />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
 
@@ -47,6 +50,14 @@ export function App() {
                 element={
                   <ProtectedRoute>
                     <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/my-registrations"
+                element={
+                  <ProtectedRoute>
+                    <MyRegistrations />
                   </ProtectedRoute>
                 }
               />
