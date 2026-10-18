@@ -1,0 +1,110 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum Category {
+  TECH
+  CULTURAL
+  WORKSHOP
+  INFORMALS
+}
+
+enum EventStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum RegistrationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  UPI
+  CARD
+  NET_BANKING
+  WALLET
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  name          String
+  email         String         @unique
+  password      String
+  role          Role           @default(USER)
+  phone         String?
+  department    String?
+  createdAt     DateTime       @default(now())
+  createdEvents Event[]        @relation("AdminEvents")
+  registrations Registration[]
+}
+
+model Event {
+  id            Int            @id @default(autoincrement())
+  title         String
+  description   String
+  venue         String
+  date          DateTime
+  maxCapacity   Int
+  fee           Decimal        @default(0.0)
+  category      Category
+  imageUrl      String?
+  status        EventStatus    @default(UPCOMING)
+  createdById   Int
+  createdBy     User           @relation("AdminEvents", fields: [createdById], references: [id])
+  registrations Registration[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@index([category])
+  @@index([status])
+}
+
+model Registration {
+  id           Int                @id @default(autoincrement())
+  userId       Int
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventId      Int
+  event        Event              @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  status       RegistrationStatus @default(PENDING)
+  registeredAt DateTime           @default(now())
+  payment      Payment?
+
+  @@unique([userId, eventId])
+  @@index([userId])
+  @@index([eventId])
+}
+
+model Payment {
+  id                Int            @id @default(autoincrement())
+  registrationId    Int            @unique
+  registration      Registration   @relation(fields: [registrationId], references: [id], onDelete: Cascade)
+  amount            Decimal
+  method            PaymentMethod  @default(UPI)
+  status            PaymentStatus  @default(PENDING)
+  razorpayOrderId   String?        @unique
+  razorpayPaymentId String?        @unique
+  razorpaySignature String?
+  paidAt            DateTime?
+  createdAt         DateTime       @default(now())
+}
